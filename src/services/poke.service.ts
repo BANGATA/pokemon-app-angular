@@ -20,9 +20,9 @@ export class PokeApiService {
     }
   }
 
-  async fetchPokemonByName(name: string): Promise<any> {
+  async fetchPokemonByName(name?: string): Promise<any> {
     try {
-      const response = await axios.get(`${this.baseUrl}/pokemon/${name}`);
+      const response = await axios.get(`${this.baseUrl}pokemon/${name}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching Pokémon:', error);

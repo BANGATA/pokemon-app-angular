@@ -13,55 +13,57 @@
 
   <div id="container">
     <div class="records">
-      <div style="width: 100%">
-        <ion-item>
-          <ion-label>Filter by Type</ion-label>
-          <ion-select
-            [(ngModel)]="selectedType"
-            (ionChange)="onTypeChange($event.target.value)"
-          >
-            <ion-select-option value="all">All</ion-select-option>
-            <ion-select-option *ngFor="let type of allTypes" [value]="type">
-              {{ type.charAt(0).toUpperCase() + type.substr(1) }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-      </div>
-      <div style="width: 100%; display: flex">
-        <ion-item style="width: 100%">
-          <ion-input
-            [(ngModel)]="search"
-            (ionChange)="handleChangeSearch($event)"
-            placeholder="Enter pokemon name"
-          ></ion-input>
-          <ion-button (click)="handleSearchPokemon()">Search</ion-button>
-        </ion-item>
-      </div>
+      <ion-item>
+        <ion-input
+          [(ngModel)]="search"
+          (ionChange)="handleChangeSearch($event)"
+          placeholder="Enter pokemon name"
+        ></ion-input>
+        <ion-button (click)="handleSearchPokemon()">Search</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-select
+          label="Filter by Type"
+          [(ngModel)]="selectedType"
+          (ionChange)="onTypeChange($event.target.value)"
+        >
+          <ion-select-option value="all">All</ion-select-option>
+          <ion-select-option *ngFor="let type of allTypes" [value]="type">
+            {{ type.charAt(0).toUpperCase() + type.substr(1) }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
     </div>
 
-    <div class="gridContainer">
+    <div class="grid-container" *ngIf="pokemons || filteredPokemons">
       <ion-card
         *ngFor="let pokemon of selectedType === 'all' ? pokemons : filteredPokemons"
       >
-        <img
-          alt="{{ pokemon.name }}"
-          [src]="pokemon.image || 'https://ionicframework.com/docs/img/demos/card-media.png'"
-        />
+        <div class="header-container">
+          <div class="header-rank"># {{ pokemon.id }}</div>
+          <div class="header-image-container">
+            <img class="header-image"
+              alt="{{ pokemon.name }}"
+              [src]="pokemon.image ||
+            'https://ionicframework.com/docs/img/demos/card-media.png'"
+            />
+          </div>
+        </div>
         <ion-card-header>
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            "
-          >
-            <ion-card-title
-              >{{ pokemon.name.charAt(0).toUpperCase() + pokemon.name.substr(1)
-              }}</ion-card-title
-            >
+          <div class="title">
+            <ion-card-title>
+              {{pokemon.name.charAt(0).toUpperCase() + pokemon.name.substr(1)}}
+            </ion-card-title>
             <ng-icon name="ionStarOutline" size="20px" />
           </div>
-          <ion-card-subtitle> {{ pokemon.types }} </ion-card-subtitle>
+          <ion-card-subtitle>
+            <ion-badge
+              *ngFor="let type of pokemon.types.split(' ')"
+              [ngClass]="getTypeClass(type)"
+            >
+              {{ type }}
+            </ion-badge>
+          </ion-card-subtitle>
         </ion-card-header>
 
         <ion-card-content>
@@ -69,6 +71,9 @@
           tall.
         </ion-card-content>
       </ion-card>
+    </div>
+    <div *ngIf="pokemons.length <= 0 && filteredPokemons.length <= 0">
+      <h1 class="error-message">No Pokémon Found!</h1>
     </div>
 
     <ion-infinite-scroll

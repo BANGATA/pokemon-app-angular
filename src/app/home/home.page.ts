@@ -52,12 +52,15 @@ export class HomePage {
           this.pokemons.push({
             name: details.name,
             image: details.sprites.front_default,
-            types: details.types.map(
-              (t: any) =>
-                t.type.name.charAt(0).toUpperCase() + t.type.name.substr(1)
-            ),
+            types: details.types
+              .map(
+                (t: any) =>
+                  t.type.name.charAt(0).toUpperCase() + t.type.name.substr(1)
+              )
+              .join(' '),
             height: details.height,
             weight: details.weight,
+            id: details.id,
           });
         }
         this.offset += this.limit;
@@ -76,12 +79,15 @@ export class HomePage {
           this.filteredPokemons.push({
             name: details.name,
             image: details.sprites.front_default,
-            types: details.types.map(
-              (t: any) =>
-                t.type.name.charAt(0).toUpperCase() + t.type.name.substr(1)
-            ),
+            types: details.types
+              .map(
+                (t: any) =>
+                  t.type.name.charAt(0).toUpperCase() + t.type.name.substr(1)
+              )
+              .join(' '),
             height: details.height,
             weight: details.weight,
+            id: details.id,
           });
         }
         this.hasMore = false;
@@ -102,19 +108,102 @@ export class HomePage {
   }
 
   async handleSearchPokemon() {
-    this.pokemons = [];
-    const res = await this.pokeApiService.fetchPokemonByName(
-      this.search.toLowerCase()
-    );
-    this.pokemons.push({
-      name: res.name,
-      image: res.sprites.front_default,
-      types: res.types.map((t: any) => t.type.name),
-    });
+    if (this.search === '') {
+      this.pokemons = [];
+      const res = await this.pokeApiService.fetchPokemonByName(
+        this.search.toLowerCase()
+      );
+      if (res) {
+        for (const pokemon of res.results) {
+          const details = await this.pokeApiService.fetchPokemonDetails(
+            pokemon.url
+          );
+          this.pokemons.push({
+            name: details.name,
+            image: details.sprites.front_default,
+            types: details.types
+              .map(
+                (t: any) =>
+                  t.type.name.charAt(0).toUpperCase() + t.type.name.substr(1)
+              )
+              .join(' '),
+            height: details.height,
+            weight: details.weight,
+            id: details.id,
+          });
+        }
+      }
+    } else if (this.search !== '') {
+      this.pokemons = [];
+      const res = await this.pokeApiService.fetchPokemonByName(
+        this.search.toLowerCase()
+      );
+      if (res) {
+        this.pokemons.push({
+          name: res.name,
+          image: res.sprites.front_default,
+          types: res.types
+            .map(
+              (t: any) =>
+                t.type.name.charAt(0).toUpperCase() + t.type.name.substr(1)
+            )
+            .join(' '),
+          height: res.height,
+          weight: res.weight,
+          id: res.id
+        });
+      }
+    }
   }
 
   handleChangeSearch(event: any) {
     this.search = event.detail.value;
+  }
+
+  getTypeClass(types: string): string {
+    const firstType = types.split(' ')[0];
+    switch (firstType) {
+      case 'Grass':
+        return 'badge-grass';
+      case 'Fire':
+        return 'badge-fire';
+      case 'Water':
+        return 'badge-water';
+      case 'Electric':
+        return 'badge-electric';
+      case 'Flying':
+        return 'badge-flying';
+      case 'Normal':
+        return 'badge-normal';
+      case 'Poison':
+        return 'badge-poison';
+      case 'Fairy':
+        return 'badge-fairy';
+      case 'Ground':
+        return 'badge-ground';
+      case 'Bug':
+        return 'badge-bug';
+      case 'Rock':
+        return 'badge-rock';
+      case 'Dark':
+        return 'badge-dark';
+      case 'Dragon':
+        return 'badge-dragon';
+      case 'Ice':
+        return 'badge-ice';
+      case 'Ghost':
+        return 'badge-ghost';
+      case 'Steel':
+        return 'badge-steel';
+      case 'Stellar':
+        return 'badge-stellar';
+      case 'Psychic':
+        return 'badge-psychic';
+      case 'Fighting':
+        return 'badge-fighting';
+      default:
+        return 'badge-default';
+    }
   }
 
   resetData() {

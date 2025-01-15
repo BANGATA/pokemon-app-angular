@@ -18,7 +18,7 @@
 .records {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   gap: 16px;
   padding-left: 10px;
   padding-right: 10px;
@@ -28,6 +28,11 @@
   .records {
     flex-direction: column;
   }
+
+  .records ion-item {
+    width: 100%;
+  }
+
   #container {
     padding: 8px;
     gap: 0px;
@@ -37,8 +42,153 @@
   }
 }
 
-.gridContainer {
+.grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   width: 100%;
+}
+
+ion-badge.badge-grass {
+  background-color: #78c850;
+  color: white;
+}
+
+ion-badge.badge-fire {
+  background-color: #f08030;
+  color: white;
+}
+
+ion-badge.badge-water {
+  background-color: #6890f0;
+  color: white;
+}
+
+ion-badge.badge-electric {
+  background-color: #f8d030;
+  color: black;
+}
+
+ion-badge.badge-flying {
+  background-color: #a890f0;
+  color: white;
+}
+
+ion-badge.badge-normal {
+  background-color: #a8a878;
+  color: black;
+}
+
+ion-badge.badge-ground {
+  background-color: #6e6e10;
+  color: white;
+}
+
+ion-badge.badge-bug {
+  background-color: #255d25;
+  color: white;
+}
+
+ion-badge.badge-rock {
+  background-color: #3d3d3d;
+  color: white;
+}
+
+ion-badge.badge-ghost {
+  background-color: #b2b2b2;
+  color: black;
+}
+
+ion-badge.badge-steel {
+  background-color: #7f7f7f;
+  color: white;
+}
+
+ion-badge.badge-psychic {
+  background-color: #9f278b;
+  color: white;
+}
+
+ion-badge.badge-ice {
+  background-color: #1edcea;
+  color: black;
+}
+
+ion-badge.badge-dragon {
+  background-color: #a70303;
+  color: white;
+}
+
+ion-badge.badge-dark {
+  background-color: #191515;
+  color: white;
+}
+
+ion-badge.badge-stellar {
+  background-color: #ff00c3;
+  color: black;
+}
+
+ion-badge.badge-poison {
+  background-color: rgb(198, 4, 4);
+  color: white;
+}
+
+ion-badge.badge-fairy {
+  background-color: rgb(198, 4, 140);
+  color: white;
+}
+
+ion-badge.badge-fighting {
+  background-color: rgb(195, 148, 94);
+  color: white;
+}
+
+ion-badge.badge-default {
+  background-color: #d3d3d3;
+  color: black;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ion-card-subtitle {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  background: #cc0808;
+}
+
+.header-image-container {
+  border-start-start-radius: 999px;
+  border-end-end-radius: 999px;
+  background-color: white;
+  width: 60%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.header-image {
+  width: 100px;
+  height: 100px;
+}
+
+.header-rank {
+  color: rgb(0, 0, 0);
+  background-color: #fcc200;
+  padding: 8px;
+  height: max-content;
+  border-bottom-right-radius: 8px;
+}
+
+.error-message {
+  color: #cc0808;
 }
