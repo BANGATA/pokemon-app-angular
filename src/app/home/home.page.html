@@ -1,20 +1,86 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title class="Title"> Pokemon App </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Pokemon App</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <div class="records">
+      <div style="width: 100%">
+        <ion-item>
+          <ion-label>Filter by Type</ion-label>
+          <ion-select
+            [(ngModel)]="selectedType"
+            (ionChange)="onTypeChange($event.target.value)"
+          >
+            <ion-select-option value="all">All</ion-select-option>
+            <ion-select-option *ngFor="let type of allTypes" [value]="type">
+              {{ type.charAt(0).toUpperCase() + type.substr(1) }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div style="width: 100%; display: flex">
+        <ion-item style="width: 100%">
+          <ion-input
+            [(ngModel)]="search"
+            (ionChange)="handleChangeSearch($event)"
+            placeholder="Enter pokemon name"
+          ></ion-input>
+          <ion-button (click)="handleSearchPokemon()">Search</ion-button>
+        </ion-item>
+      </div>
+    </div>
+
+    <div class="gridContainer">
+      <ion-card
+        *ngFor="let pokemon of selectedType === 'all' ? pokemons : filteredPokemons"
+      >
+        <img
+          alt="{{ pokemon.name }}"
+          [src]="pokemon.image || 'https://ionicframework.com/docs/img/demos/card-media.png'"
+        />
+        <ion-card-header>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <ion-card-title
+              >{{ pokemon.name.charAt(0).toUpperCase() + pokemon.name.substr(1)
+              }}</ion-card-title
+            >
+            <ng-icon name="ionStarOutline" size="20px" />
+          </div>
+          <ion-card-subtitle> {{ pokemon.types }} </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          This Pokémon is {{ pokemon.weight }} kg and {{ pokemon.height }} cm
+          tall.
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ion-infinite-scroll
+      threshold="100px"
+      (ionInfinite)="loadMore($event)"
+      *ngIf="selectedType === 'all'"
+    >
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more Pokémon..."
+      >
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </div>
 </ion-content>
