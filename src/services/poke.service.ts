@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 })
 export class PokeApiService {
   private baseUrl = environment.api_url;
-
   async fetchPokemon(offset: number, limit: number): Promise<any> {
     try {
       const response = await axios.get(
@@ -17,6 +16,15 @@ export class PokeApiService {
     } catch (error) {
       console.error('Error fetching Pokémon:', error);
       throw error;
+    }
+  }
+
+  async loadPokemonTypes() {
+    try {
+      const response = await axios.get(`${environment.api_url}type/`);
+      return response.data.results.map((type: any) => type.name);
+    } catch (error) {
+      console.error('Error fetching Pokémon types:', error);
     }
   }
 

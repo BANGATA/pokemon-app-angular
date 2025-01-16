@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
 import { PokeApiService } from 'src/services/poke.service';
+import { IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -18,19 +19,25 @@ export class HomePage {
   selectedType = 'all';
   allTypes: string[] = [];
   search: string = '';
-
+  selectedPokemon: any = null;
+  @ViewChild(IonModal) modal!: IonModal;
   constructor(private pokeApiService: PokeApiService) {
-    this.loadPokemonTypes();
+    this.fetchPokemonTypes();
     this.loadMore();
   }
 
-  async loadPokemonTypes() {
-    try {
-      const response = await axios.get(`${environment.api_url}type/`);
-      this.allTypes = response.data.results.map((type: any) => type.name);
-    } catch (error) {
-      console.error('Error fetching Pokémon types:', error);
-    }
+  async fetchPokemonTypes() {
+    this.allTypes = await this.pokeApiService.loadPokemonTypes();
+  }
+
+  openModal(pokemon: any) {
+    this.selectedPokemon = pokemon;
+    this.modal.present();
+  }
+
+  dismissModal() {
+    this.modal.dismiss();
+    this.selectedPokemon = null;
   }
 
   async loadMore(event?: any) {
@@ -49,6 +56,11 @@ export class HomePage {
           const details = await this.pokeApiService.fetchPokemonDetails(
             pokemon.url
           );
+          const stats = details.stats.reduce((acc: any, statObj: any) => {
+            const statName = statObj.stat.name.replace(/-/g, '');
+            acc[statName] = statObj.base_stat;
+            return acc;
+          }, {});
           this.pokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -61,10 +73,11 @@ export class HomePage {
             height: details.height,
             weight: details.weight,
             id: details.id,
+            ...stats,
           });
         }
         this.offset += this.limit;
-
+        console.log(this.pokemons);
         if (this.pokemons.length >= data.count) {
           this.hasMore = false;
         }
@@ -76,6 +89,11 @@ export class HomePage {
           const details = await this.pokeApiService.fetchPokemonDetails(
             pokemon.url
           );
+          const stats = details.stats.reduce((acc: any, statObj: any) => {
+            const statName = statObj.stat.name.replace(/-/g, '');
+            acc[statName] = statObj.base_stat;
+            return acc;
+          }, {});
           this.filteredPokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -88,6 +106,7 @@ export class HomePage {
             height: details.height,
             weight: details.weight,
             id: details.id,
+            ...stats,
           });
         }
         this.hasMore = false;
@@ -118,6 +137,11 @@ export class HomePage {
           const details = await this.pokeApiService.fetchPokemonDetails(
             pokemon.url
           );
+          const stats = details.stats.reduce((acc: any, statObj: any) => {
+            const statName = statObj.stat.name.replace(/-/g, '');
+            acc[statName] = statObj.base_stat;
+            return acc;
+          }, {});
           this.pokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -130,34 +154,41 @@ export class HomePage {
             height: details.height,
             weight: details.weight,
             id: details.id,
+            ...stats,
           });
         }
       }
     } else if (this.search !== '') {
       this.pokemons = [];
-      const res = await this.pokeApiService.fetchPokemonByName(
+      const details = await this.pokeApiService.fetchPokemonByName(
         this.search.toLowerCase()
       );
-      if (res) {
+      const stats = details.stats.reduce((acc: any, statObj: any) => {
+        const statName = statObj.stat.name.replace(/-/g, '');
+        acc[statName] = statObj.base_stat;
+        return acc;
+      }, {});
+      if (details) {
         this.pokemons.push({
-          name: res.name,
-          image: res.sprites.front_default,
-          types: res.types
+          name: details.name,
+          image: details.sprites.front_default,
+          types: details.types
             .map(
               (t: any) =>
                 t.type.name.charAt(0).toUpperCase() + t.type.name.substr(1)
             )
             .join(' '),
-          height: res.height,
-          weight: res.weight,
-          id: res.id
+          height: details.height,
+          weight: details.weight,
+          id: details.id,
+          ...stats,
         });
       }
     }
   }
 
-  handleChangeSearch(event: any) {
-    this.search = event.detail.value;
+  handleChangeSearch(name: string) {
+    this.search = name;
   }
 
   getTypeClass(types: string): string {

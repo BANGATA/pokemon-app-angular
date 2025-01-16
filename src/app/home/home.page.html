@@ -16,7 +16,8 @@
       <ion-item>
         <ion-input
           [(ngModel)]="search"
-          (ionChange)="handleChangeSearch($event)"
+          type="text"
+          (ionChange)="handleChangeSearch($event.detail.value!)"
           placeholder="Enter pokemon name"
         ></ion-input>
         <ion-button (click)="handleSearchPokemon()">Search</ion-button>
@@ -34,9 +35,11 @@
         </ion-select>
       </ion-item>
     </div>
-
     <div class="grid-container" *ngIf="pokemons || filteredPokemons">
       <ion-card
+        expand="block"
+        id="open-modal"
+        (click)="openModal(pokemon)"
         *ngFor="let pokemon of selectedType === 'all' ? pokemons : filteredPokemons"
       >
         <div class="header-container">
@@ -87,6 +90,72 @@
       <h1 class="error-message">No Pokémon Found!</h1>
     </div>
 
+    <ion-modal id="open-modal" trigger="open-modal">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title
+              >{{ selectedPokemon?.name.charAt(0).toUpperCase() +
+              selectedPokemon?.name.substr(1) || 'Pokemon' }}</ion-title
+            >
+            <ion-buttons slot="end">
+              <ion-button (click)="dismissModal()">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <div *ngIf="selectedPokemon" class="stats-container">
+            <div class="stats-header-container">
+              <div class="stats-rank"># {{selectedPokemon.id}}</div>
+              <img
+                class="pokemon-image"
+                [alt]="selectedPokemon.name"
+                [src]="selectedPokemon.image || 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngplay.com%2Fwp-content%2Fuploads%2F5%2FQuestion-Mark-Symbol-PNG-Photo-Image.png&f=1&nofb=1&ipt=ef39b7947117870b5b1f4fe9c055778c66e6e09bf6b797a43047021ea5ff2325&ipo=images'"
+              />
+              <div class="hidden-div"># {{selectedPokemon.id}}</div>
+            </div>
+            <h1>
+              {{selectedPokemon?.name.charAt(0).toUpperCase() +
+              selectedPokemon?.name.substr(1)}}
+            </h1>
+            <div class="stats-details">
+              <div class="stats-number">
+                HP <progress [value]="selectedPokemon.hp" max="100"></progress>
+              </div>
+              <div class="stats-number">
+                Attack
+                <progress [value]="selectedPokemon.attack" max="100"></progress>
+              </div>
+              <div class="stats-number">
+                Defense
+                <progress
+                  [value]="selectedPokemon.defense"
+                  max="100"
+                ></progress>
+              </div>
+              <div class="stats-number">
+                Special Attack
+                <progress
+                  [value]="selectedPokemon.specialattack"
+                  max="100"
+                ></progress>
+              </div>
+              <div class="stats-number">
+                Special Defense
+                <progress
+                  [value]="selectedPokemon.specialdefense"
+                  max="100"
+                ></progress>
+              </div>
+              <div class="stats-number">
+                Speed
+                <progress [value]="selectedPokemon.speed" max="100"></progress>
+              </div>
+            </div>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
     <ion-infinite-scroll
       threshold="100px"
       (ionInfinite)="loadMore($event)"

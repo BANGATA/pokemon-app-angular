@@ -203,6 +203,92 @@ ion-card-subtitle {
   border-bottom-right-radius: 8px;
 }
 
+.stats-rank {
+  color: rgb(0, 0, 0);
+  background-color: #fcc200;
+  padding: 8px;
+  height: max-content;
+  border-bottom-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+
+.stats-header-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.stats-container {
+  background-color: #cc0808;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  height: 80%;
+  margin-top: 100px;
+  border-radius: 20px;
+}
+
+.stats-details {
+  height: 100%;
+  border: 1px solid black;
+  width: 100%;
+  background-color: white;
+  border-start-start-radius: 999px;
+  border-start-end-radius: 999px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  color: black;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.stats-number {
+  display: flex;
+  justify-content: space-between;
+  width: 55%;
+  padding: 2px;
+}
+
+@media screen and (max-width: 767px) {
+  .stats-number {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 435px) {
+  .stats-number {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .stats-number {
+    width: 100%;
+  }
+}
+
 .error-message {
   color: #cc0808;
+}
+
+.pokemon-image {
+  width: 150px;
+  height: 150px;
+  margin-top: -100px;
+}
+
+.hidden-div {
+  opacity: 0;
+}
+
+progress {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+progress::-webkit-progress-value {
+  background-color: #4caf50;
 }
