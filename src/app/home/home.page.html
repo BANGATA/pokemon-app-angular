@@ -214,7 +214,7 @@
         [header]="selectedPokemon?.name.charAt(0).toUpperCase() +
                 selectedPokemon?.name.substr(1)"
         [subHeader]="selectedPokemon.isFavorite ? 'Added to Favorite' : 'Removed from Favorite'"
-        [message]="selectedPokemon.isFavorite ? 'Nice choice!' : 'No! Why you removed such a cute Pokémon?'"
+        [message]="selectedPokemon.isFavorite ? 'Nice choice!' : 'No! How dare you remove such a cute Pokémon!'"
       ></ion-alert>
       <ion-infinite-scroll
         threshold="100px"
