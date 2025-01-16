@@ -74,8 +74,7 @@
                 [name]="pokemon.isFavorite ? 'ionStarSharp' : 'ionStarOutline'"
                 size="20px"
                 [style.color]="pokemon.isFavorite ? 'yellow' : 'inherit'"
-                (click)="openAlert(pokemon)"
-                expand="block"
+                (click)="toggleFavorite(pokemon)"
               />
             </div>
             <ion-card-subtitle>
@@ -101,11 +100,7 @@
         </ion-button>
       </div>
 
-      <ion-modal
-        (ionModalDidDismiss)="dismissModal()"
-        role="dialog"
-        aria-modal="true"
-      >
+      <ion-modal>
         <ng-template>
           <ion-header>
             <ion-toolbar>
@@ -132,8 +127,7 @@
                     [name]="selectedPokemon.isFavorite ? 'ionStarSharp' : 'ionStarOutline'"
                     size="20px"
                     [style.color]="selectedPokemon.isFavorite ? 'yellow' : 'white'"
-                    (click)="openAlert(selectedPokemon)"
-                    expand="block"
+                    (click)="toggleFavorite(selectedPokemon)"
                   />
                 </div>
               </div>
@@ -186,17 +180,6 @@
           </ion-content>
         </ng-template>
       </ion-modal>
-      <ion-alert
-        role="alertdialog"
-        *ngIf="selectedPokemon"
-        [header]="selectedPokemon?.name.charAt(0).toUpperCase() +
-                selectedPokemon?.name.substr(1)"
-        subHeader="Remove Confirmation"
-        message="Are you sure want to remove this cute Pokémon from your favorite?"
-        [buttons]="alertButtons"
-        [isOpen]="isAlertOpen"
-        (ionAlertDidDismiss)="dismissAlert()"
-      ></ion-alert>
     </div>
   </ion-content>
 </div>

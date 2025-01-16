@@ -71,8 +71,6 @@
         >
           <div
             class="header-container"
-            expand="block"
-            id="open-modal"
             (click)="openModal(pokemon)"
           >
             <div class="header-rank"># {{ pokemon.id }}</div>
@@ -106,7 +104,6 @@
                 size="20px"
                 [style.color]="pokemon.isFavorite ? 'yellow' : 'inherit'"
                 (click)="toggleFavorite(pokemon)"
-                id="present-alert"
               />
             </div>
             <ion-card-subtitle>
@@ -129,7 +126,7 @@
         <h1 class="error-message">No Pokémon Found!</h1>
       </div>
 
-      <ion-modal id="open-modal" trigger="open-modal">
+      <ion-modal>
         <ng-template>
           <ion-header>
             <ion-toolbar>
@@ -157,7 +154,6 @@
                     size="20px"
                     [style.color]="selectedPokemon.isFavorite ? 'yellow' : 'white'"
                     (click)="toggleFavorite(selectedPokemon)"
-                    id="present-alert"
                   />
                 </div>
               </div>
@@ -210,15 +206,6 @@
           </ion-content>
         </ng-template>
       </ion-modal>
-      <ion-alert
-        *ngIf="selectedPokemon"
-        trigger="present-alert"
-        [header]="selectedPokemon?.name.charAt(0).toUpperCase() +
-                selectedPokemon?.name.substr(1)"
-        [subHeader]="selectedPokemon.isFavorite ? 'Added to Favorite' : 'Removed from Favorite'"
-        [message]="selectedPokemon.isFavorite ? 'Nice choice! Take care of this cute Pokémon.' : 'No! How dare you remove such a cute Pokémon!'"
-        [isOpen]="isAlertOpen"
-      ></ion-alert>
       <ion-infinite-scroll
         threshold="100px"
         (ionInfinite)="loadMore($event)"
