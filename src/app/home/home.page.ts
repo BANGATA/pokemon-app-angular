@@ -1,8 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import axios from 'axios';
-import { environment } from 'src/environments/environment';
 import { PokeApiService } from 'src/services/poke.service';
-import { IonModal } from '@ionic/angular';
+import { IonAlert, IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +19,7 @@ export class HomePage {
   search: string = '';
   selectedPokemon: any = null;
   @ViewChild(IonModal) modal!: IonModal;
+  @ViewChild(IonAlert) alert!: IonAlert;
   constructor(private pokeApiService: PokeApiService) {
     this.fetchPokemonTypes();
     this.loadMore();
@@ -35,9 +34,37 @@ export class HomePage {
     this.modal.present();
   }
 
+  openAlert(pokemon: any) {
+    this.selectedPokemon = pokemon;
+    this.alert.present();
+  }
+
   dismissModal() {
     this.modal.dismiss();
     this.selectedPokemon = null;
+  }
+
+  getFavorites(): any[] {
+    const favorites = localStorage.getItem('favoritePokemons');
+    return favorites ? JSON.parse(favorites) : [];
+  }
+
+  saveFavorites(favorites: any[]) {
+    localStorage.setItem('favoritePokemons', JSON.stringify(favorites));
+  }
+
+  toggleFavorite(pokemon: any) {
+    this.openAlert(pokemon);
+    const favorites = this.getFavorites();
+    const index = favorites.findIndex((fav: any) => fav.id === pokemon.id);
+    if (index === -1) {
+      favorites.push(pokemon);
+      pokemon.isFavorite = true;
+    } else {
+      favorites.splice(index, 1);
+      pokemon.isFavorite = false;
+    }
+    this.saveFavorites(favorites);
   }
 
   async loadMore(event?: any) {
@@ -47,20 +74,28 @@ export class HomePage {
     }
 
     try {
+      const favorites = this.getFavorites();
       if (this.selectedType === 'all') {
         const data = await this.pokeApiService.fetchPokemon(
           this.offset,
           this.limit
         );
+
         for (const pokemon of data.results) {
           const details = await this.pokeApiService.fetchPokemonDetails(
             pokemon.url
           );
+
           const stats = details.stats.reduce((acc: any, statObj: any) => {
             const statName = statObj.stat.name.replace(/-/g, '');
             acc[statName] = statObj.base_stat;
             return acc;
           }, {});
+
+          const isFavorite = favorites.some(
+            (fav: any) => fav.id === details.id
+          );
+
           this.pokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -73,6 +108,7 @@ export class HomePage {
             height: details.height,
             weight: details.weight,
             id: details.id,
+            isFavorite,
             ...stats,
           });
         }
@@ -94,6 +130,9 @@ export class HomePage {
             acc[statName] = statObj.base_stat;
             return acc;
           }, {});
+          const isFavorite = favorites.some(
+            (fav: any) => fav.id === details.id
+          );
           this.filteredPokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -106,6 +145,7 @@ export class HomePage {
             height: details.height,
             weight: details.weight,
             id: details.id,
+            isFavorite,
             ...stats,
           });
         }
@@ -127,6 +167,7 @@ export class HomePage {
   }
 
   async handleSearchPokemon() {
+    const favorites = this.getFavorites();
     if (this.search === '') {
       this.pokemons = [];
       const res = await this.pokeApiService.fetchPokemonByName(
@@ -142,6 +183,9 @@ export class HomePage {
             acc[statName] = statObj.base_stat;
             return acc;
           }, {});
+          const isFavorite = favorites.some(
+            (fav: any) => fav.id === details.id
+          );
           this.pokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -154,6 +198,7 @@ export class HomePage {
             height: details.height,
             weight: details.weight,
             id: details.id,
+            isFavorite,
             ...stats,
           });
         }
@@ -168,6 +213,7 @@ export class HomePage {
         acc[statName] = statObj.base_stat;
         return acc;
       }, {});
+      const isFavorite = favorites.some((fav: any) => fav.id === details.id);
       if (details) {
         this.pokemons.push({
           name: details.name,
@@ -181,6 +227,7 @@ export class HomePage {
           height: details.height,
           weight: details.weight,
           id: details.id,
+          isFavorite,
           ...stats,
         });
       }

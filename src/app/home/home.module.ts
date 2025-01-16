@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { ionStarOutline } from '@ng-icons/ionicons';
+import { ionStarOutline, ionStarSharp } from '@ng-icons/ionicons';
 import { NgIconsModule } from '@ng-icons/core';
 
 
@@ -15,7 +15,7 @@ import { NgIconsModule } from '@ng-icons/core';
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    NgIconsModule.withIcons({ ionStarOutline }),
+    NgIconsModule.withIcons({ ionStarOutline, ionStarSharp }),
   ],
   declarations: [HomePage]
 })
