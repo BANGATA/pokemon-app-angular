@@ -5,7 +5,7 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <div style="display: flex; flex-direction: column">
+    <div class="menu-container">
       <ion-item routerLink="/home" routerDirection="root">
         <ion-icon slot="start" name="home-outline"></ion-icon>
         <ion-label>Home</ion-label>
@@ -42,15 +42,8 @@
     </ion-header>
     <div id="container">
       <div class="grid-container" *ngIf="pokemons">
-        <ion-card
-          *ngFor="let pokemon of pokemons"
-        >
-          <div
-            class="header-container"
-            expand="block"
-            id="open-modal"
-            (click)="openModal(pokemon)"
-          >
+        <ion-card *ngFor="let pokemon of pokemons">
+          <div class="header-container" (click)="openModal(pokemon)">
             <div class="header-rank"># {{ pokemon.id }}</div>
             <div class="header-image-container">
               <img
@@ -81,7 +74,8 @@
                 [name]="pokemon.isFavorite ? 'ionStarSharp' : 'ionStarOutline'"
                 size="20px"
                 [style.color]="pokemon.isFavorite ? 'yellow' : 'inherit'"
-                (click)="toggleFavorite(pokemon)"
+                (click)="openAlert(pokemon)"
+                expand="block"
               />
             </div>
             <ion-card-subtitle>
@@ -100,11 +94,18 @@
           </ion-card-content>
         </ion-card>
       </div>
-      <div *ngIf="pokemons.length <= 0">
+      <div *ngIf="pokemons.length <= 0" class="go-home-container">
         <h1 class="error-message">No Favorite Pokémon Found!</h1>
+        <ion-button routerLink="/home" routerDirection="root">
+          Find Pokémons
+        </ion-button>
       </div>
 
-      <ion-modal id="open-modal" trigger="open-modal">
+      <ion-modal
+        (ionModalDidDismiss)="dismissModal()"
+        role="dialog"
+        aria-modal="true"
+      >
         <ng-template>
           <ion-header>
             <ion-toolbar>
@@ -131,7 +132,8 @@
                     [name]="selectedPokemon.isFavorite ? 'ionStarSharp' : 'ionStarOutline'"
                     size="20px"
                     [style.color]="selectedPokemon.isFavorite ? 'yellow' : 'white'"
-                    (click)="toggleFavorite(selectedPokemon)"
+                    (click)="openAlert(selectedPokemon)"
+                    expand="block"
                   />
                 </div>
               </div>
@@ -184,6 +186,17 @@
           </ion-content>
         </ng-template>
       </ion-modal>
+      <ion-alert
+        role="alertdialog"
+        *ngIf="selectedPokemon"
+        [header]="selectedPokemon?.name.charAt(0).toUpperCase() +
+                selectedPokemon?.name.substr(1)"
+        subHeader="Remove Confirmation"
+        message="Are you sure want to remove this cute Pokémon from your favorite?"
+        [buttons]="alertButtons"
+        [isOpen]="isAlertOpen"
+        (ionAlertDidDismiss)="dismissAlert()"
+      ></ion-alert>
     </div>
   </ion-content>
 </div>

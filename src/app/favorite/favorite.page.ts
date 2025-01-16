@@ -11,9 +11,35 @@ export class FavoritePage {
   pokemons: any[] = [];
   selectedPokemon: any = null;
   @ViewChild(IonModal) modal!: IonModal;
-
+  isAlertOpen: boolean = false;
   constructor() {
     this.getFavorites();
+  }
+
+  public alertButtons = [
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        this.isAlertOpen = false;
+      },
+    },
+    {
+      text: 'OK',
+      role: 'confirm',
+      handler: () => {
+        this.toggleFavorite(this.selectedPokemon);
+      },
+    },
+  ];
+
+  dismissAlert() {
+    this.isAlertOpen = false;
+  }
+
+  openAlert(pokemon: any) {
+    this.selectedPokemon = pokemon;
+    this.isAlertOpen = true;
   }
 
   getFavorites() {
@@ -26,6 +52,7 @@ export class FavoritePage {
     this.pokemons = this.pokemons.filter((p) => p.isFavorite);
     localStorage.setItem('favoritePokemons', JSON.stringify(this.pokemons));
     this.dismissModal();
+    this.dismissAlert();
   }
 
   openModal(pokemon: any) {

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { PokeApiService } from 'src/services/poke.service';
-import { IonAlert, IonModal } from '@ionic/angular';
+import { IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -18,8 +18,8 @@ export class HomePage {
   allTypes: string[] = [];
   search: string = '';
   selectedPokemon: any = null;
+  isAlertOpen: boolean = false;
   @ViewChild(IonModal) modal!: IonModal;
-  @ViewChild(IonAlert) alert!: IonAlert;
   constructor(private pokeApiService: PokeApiService) {
     this.fetchPokemonTypes();
     this.loadMore();
@@ -32,11 +32,6 @@ export class HomePage {
   openModal(pokemon: any) {
     this.selectedPokemon = pokemon;
     this.modal.present();
-  }
-
-  openAlert(pokemon: any) {
-    this.selectedPokemon = pokemon;
-    this.alert.present();
   }
 
   dismissModal() {
@@ -54,7 +49,8 @@ export class HomePage {
   }
 
   toggleFavorite(pokemon: any) {
-    this.openAlert(pokemon);
+    this.selectedPokemon = pokemon;
+    this.isAlertOpen = true;
     const favorites = this.getFavorites();
     const index = favorites.findIndex((fav: any) => fav.id === pokemon.id);
     if (index === -1) {
@@ -113,7 +109,6 @@ export class HomePage {
           });
         }
         this.offset += this.limit;
-        console.log(this.pokemons);
         if (this.pokemons.length >= data.count) {
           this.hasMore = false;
         }

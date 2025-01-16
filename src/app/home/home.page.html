@@ -5,7 +5,7 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <div style="display: flex; flex-direction: column">
+    <div class="menu-container">
       <ion-item routerLink="/home" routerDirection="root">
         <ion-icon slot="start" name="home-outline"></ion-icon>
         <ion-label>Home</ion-label>
@@ -106,6 +106,7 @@
                 size="20px"
                 [style.color]="pokemon.isFavorite ? 'yellow' : 'inherit'"
                 (click)="toggleFavorite(pokemon)"
+                id="present-alert"
               />
             </div>
             <ion-card-subtitle>
@@ -156,6 +157,7 @@
                     size="20px"
                     [style.color]="selectedPokemon.isFavorite ? 'yellow' : 'white'"
                     (click)="toggleFavorite(selectedPokemon)"
+                    id="present-alert"
                   />
                 </div>
               </div>
@@ -214,7 +216,8 @@
         [header]="selectedPokemon?.name.charAt(0).toUpperCase() +
                 selectedPokemon?.name.substr(1)"
         [subHeader]="selectedPokemon.isFavorite ? 'Added to Favorite' : 'Removed from Favorite'"
-        [message]="selectedPokemon.isFavorite ? 'Nice choice!' : 'No! How dare you remove such a cute Pokémon!'"
+        [message]="selectedPokemon.isFavorite ? 'Nice choice! Take care of this cute Pokémon.' : 'No! How dare you remove such a cute Pokémon!'"
+        [isOpen]="isAlertOpen"
       ></ion-alert>
       <ion-infinite-scroll
         threshold="100px"
