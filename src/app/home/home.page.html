@@ -42,11 +42,22 @@
         <div class="header-container">
           <div class="header-rank"># {{ pokemon.id }}</div>
           <div class="header-image-container">
-            <img class="header-image"
+            <img
+              *ngIf="pokemon && pokemon.image"
+              class="header-image"
               alt="{{ pokemon.name }}"
-              [src]="pokemon.image ||
-            'https://ionicframework.com/docs/img/demos/card-media.png'"
+              [src]="pokemon.image"
             />
+            <div
+              class="header-image-default-container"
+              *ngIf="pokemon && !pokemon.image"
+            >
+              <img
+                class="header-image-default"
+                alt="{{ pokemon.name }}"
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngplay.com%2Fwp-content%2Fuploads%2F5%2FQuestion-Mark-Symbol-PNG-Photo-Image.png&f=1&nofb=1&ipt=ef39b7947117870b5b1f4fe9c055778c66e6e09bf6b797a43047021ea5ff2325&ipo=images"
+              />
+            </div>
           </div>
         </div>
         <ion-card-header>
