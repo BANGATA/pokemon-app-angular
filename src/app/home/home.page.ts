@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { PokeApiService } from 'src/services/poke.service';
 import { IonModal } from '@ionic/angular';
+import { HelpersClass } from 'src/utils/helpers';
 
 @Component({
   selector: 'app-home',
@@ -18,11 +19,15 @@ export class HomePage {
   allTypes: string[] = [];
   search: string = '';
   selectedPokemon: any = null;
-  isAlertOpen: boolean = false;
   @ViewChild(IonModal) modal!: IonModal;
-  constructor(private pokeApiService: PokeApiService) {
+
+  constructor(private pokeApiService: PokeApiService, private helpers: HelpersClass) {
     this.fetchPokemonTypes();
     this.loadMore();
+  }
+
+  getTypeClass(type: string){
+    return this.helpers.getTypeClass(type);
   }
 
   async fetchPokemonTypes() {
@@ -40,8 +45,8 @@ export class HomePage {
   }
 
   getFavorites(): any[] {
-    const favorites = localStorage.getItem('favoritePokemons');
-    return favorites ? JSON.parse(favorites) : [];
+    const fav = this.helpers.getLocalStorageFavorite();
+    return fav ? JSON.parse(fav) : [];
   }
 
   saveFavorites(favorites: any[]) {
@@ -50,7 +55,6 @@ export class HomePage {
 
   toggleFavorite(pokemon: any) {
     this.selectedPokemon = pokemon;
-    this.isAlertOpen = true;
     const favorites = this.getFavorites();
     const index = favorites.findIndex((fav: any) => fav.id === pokemon.id);
     if (index === -1) {
@@ -71,6 +75,7 @@ export class HomePage {
 
     try {
       const favorites = this.getFavorites();
+
       if (this.selectedType === 'all') {
         const data = await this.pokeApiService.fetchPokemon(
           this.offset,
@@ -108,26 +113,33 @@ export class HomePage {
             ...stats,
           });
         }
+
         this.offset += this.limit;
+
         if (this.pokemons.length >= data.count) {
           this.hasMore = false;
         }
+
       } else {
         const data = await this.pokeApiService.fetchPokemonByType(
           this.selectedType
         );
+
         for (const pokemon of data) {
           const details = await this.pokeApiService.fetchPokemonDetails(
             pokemon.url
           );
+
           const stats = details.stats.reduce((acc: any, statObj: any) => {
             const statName = statObj.stat.name.replace(/-/g, '');
             acc[statName] = statObj.base_stat;
             return acc;
           }, {});
+
           const isFavorite = favorites.some(
             (fav: any) => fav.id === details.id
           );
+
           this.filteredPokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -144,10 +156,12 @@ export class HomePage {
             ...stats,
           });
         }
+
         this.hasMore = false;
       }
 
       if (event) event.target.complete();
+
     } catch (error) {
       console.error('Error loading more Pokémon:', error);
       if (event) event.target.complete();
@@ -168,19 +182,23 @@ export class HomePage {
       const res = await this.pokeApiService.fetchPokemonByName(
         this.search.toLowerCase()
       );
+      
       if (res) {
         for (const pokemon of res.results) {
           const details = await this.pokeApiService.fetchPokemonDetails(
             pokemon.url
           );
+
           const stats = details.stats.reduce((acc: any, statObj: any) => {
             const statName = statObj.stat.name.replace(/-/g, '');
             acc[statName] = statObj.base_stat;
             return acc;
           }, {});
+
           const isFavorite = favorites.some(
             (fav: any) => fav.id === details.id
           );
+
           this.pokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -203,11 +221,13 @@ export class HomePage {
       const details = await this.pokeApiService.fetchPokemonByName(
         this.search.toLowerCase()
       );
+
       const stats = details.stats.reduce((acc: any, statObj: any) => {
         const statName = statObj.stat.name.replace(/-/g, '');
         acc[statName] = statObj.base_stat;
         return acc;
       }, {});
+      
       const isFavorite = favorites.some((fav: any) => fav.id === details.id);
       if (details) {
         this.pokemons.push({
@@ -231,52 +251,6 @@ export class HomePage {
 
   handleChangeSearch(name: string) {
     this.search = name;
-  }
-
-  getTypeClass(types: string): string {
-    const firstType = types.split(' ')[0];
-    switch (firstType) {
-      case 'Grass':
-        return 'badge-grass';
-      case 'Fire':
-        return 'badge-fire';
-      case 'Water':
-        return 'badge-water';
-      case 'Electric':
-        return 'badge-electric';
-      case 'Flying':
-        return 'badge-flying';
-      case 'Normal':
-        return 'badge-normal';
-      case 'Poison':
-        return 'badge-poison';
-      case 'Fairy':
-        return 'badge-fairy';
-      case 'Ground':
-        return 'badge-ground';
-      case 'Bug':
-        return 'badge-bug';
-      case 'Rock':
-        return 'badge-rock';
-      case 'Dark':
-        return 'badge-dark';
-      case 'Dragon':
-        return 'badge-dragon';
-      case 'Ice':
-        return 'badge-ice';
-      case 'Ghost':
-        return 'badge-ghost';
-      case 'Steel':
-        return 'badge-steel';
-      case 'Stellar':
-        return 'badge-stellar';
-      case 'Psychic':
-        return 'badge-psychic';
-      case 'Fighting':
-        return 'badge-fighting';
-      default:
-        return 'badge-default';
-    }
   }
 
   resetData() {
