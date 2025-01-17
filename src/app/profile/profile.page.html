@@ -1,28 +1,4 @@
-<ion-menu contentId="main-content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Pokemon App</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <div class="menu-container">
-      <ion-item routerLink="/home" routerDirection="root">
-        <ion-icon slot="start" name="home-outline"></ion-icon>
-        <ion-label>Home</ion-label>
-      </ion-item>
-
-      <ion-item routerLink="/profile" routerDirection="root">
-        <ion-icon slot="start" name="person-outline"></ion-icon>
-        <ion-label>Profile</ion-label>
-      </ion-item>
-
-      <ion-item routerLink="/favorite" routerDirection="root">
-        <ion-icon slot="start" name="star-outline"></ion-icon>
-        <ion-label>Favorite</ion-label>
-      </ion-item>
-    </div>
-  </ion-content>
-</ion-menu>
+<app-menu></app-menu>
 
 <div class="ion-page" id="main-content">
   <ion-header [translucent]="true">
@@ -40,5 +16,27 @@
         <ion-title size="large">Profile</ion-title>
       </ion-toolbar>
     </ion-header>
+    <div id="container">
+      <div class="profile-card-container">
+        <div class="profile-card-inner-container">
+          <div class="top-section">
+            <strong>Raditya</strong>
+            <div class="hidden-div">TES</div>
+          </div>
+          <div class="middle-section">
+            <a target="_blank" href="https://radityaherkristito.com">
+              <img
+                src="https://media.licdn.com/dms/image/v2/D5603AQFcRTXhOLCuBQ/profile-displayphoto-shrink_200_200/B56ZP8_WpfHoAY-/0/1735116287757?e=1742428800&v=beta&t=wOdKz8bII94vj1vKS3nVMOaZ4jIMA9tLnMJtwhJQRGY"
+                alt="Profile Picture"
+              />
+            </a>
+          </div>
+          <div class="bottom-section">
+            <div class="hidden-div">TES</div>
+            <strong>Herkristito</strong>
+          </div>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </div>

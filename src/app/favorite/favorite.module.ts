@@ -9,6 +9,7 @@ import { FavoritePageRoutingModule } from './favorite-routing.module';
 import { FavoritePage } from './favorite.page';
 import { NgIconsModule } from '@ng-icons/core';
 import { ionStarOutline, ionStarSharp } from '@ng-icons/ionicons';
+import { MenuComponent } from "../menu/menu.component";
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { ionStarOutline, ionStarSharp } from '@ng-icons/ionicons';
     IonicModule,
     FavoritePageRoutingModule,
     NgIconsModule.withIcons({ ionStarOutline, ionStarSharp }),
-  ],
+    MenuComponent
+],
   declarations: [FavoritePage]
 })
 export class FavoritePageModule {}

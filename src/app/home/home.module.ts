@@ -7,6 +7,7 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { ionStarOutline, ionStarSharp } from '@ng-icons/ionicons';
 import { NgIconsModule } from '@ng-icons/core';
+import { MenuComponent } from "../menu/menu.component";
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { NgIconsModule } from '@ng-icons/core';
     IonicModule,
     HomePageRoutingModule,
     NgIconsModule.withIcons({ ionStarOutline, ionStarSharp }),
-  ],
+    MenuComponent
+],
   declarations: [HomePage]
 })
 export class HomePageModule {}
