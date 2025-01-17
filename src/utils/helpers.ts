@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class HelpersClass {
+  // GET pokemon types and assign to styling classes
   getTypeClass(types: string): string {
     const firstType = types.split(' ')[0];
     switch (firstType) {
@@ -50,6 +51,7 @@ export class HelpersClass {
     }
   }
 
+  // GET favorite pokemons from local storage
   getLocalStorageFavorite() {
     const favorites = localStorage.getItem('favoritePokemons');
     return favorites

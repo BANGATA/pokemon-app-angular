@@ -21,38 +21,48 @@ export class HomePage {
   selectedPokemon: any = null;
   @ViewChild(IonModal) modal!: IonModal;
 
-  constructor(private pokeApiService: PokeApiService, private helpers: HelpersClass) {
+  constructor(
+    private pokeApiService: PokeApiService,
+    private helpers: HelpersClass
+  ) {
     this.fetchPokemonTypes();
     this.loadMore();
   }
 
-  getTypeClass(type: string){
+  // GET pokemon type and assign their classes
+  getTypeClass(type: string) {
     return this.helpers.getTypeClass(type);
   }
 
+  // GET all pokemon types from API
   async fetchPokemonTypes() {
     this.allTypes = await this.pokeApiService.loadPokemonTypes();
   }
 
+  // Open modal interaction for pokemon detail
   openModal(pokemon: any) {
     this.selectedPokemon = pokemon;
     this.modal.present();
   }
 
+  // Close modal interaction
   dismissModal() {
     this.modal.dismiss();
     this.selectedPokemon = null;
   }
 
+  // GET all favorite pokemons from local storage
   getFavorites(): any[] {
     const fav = this.helpers.getLocalStorageFavorite();
     return fav ? JSON.parse(fav) : [];
   }
 
+  // Save favorite pokemons to local storage
   saveFavorites(favorites: any[]) {
     localStorage.setItem('favoritePokemons', JSON.stringify(favorites));
   }
 
+  // Handle favorite pokemon interaction
   toggleFavorite(pokemon: any) {
     this.selectedPokemon = pokemon;
     const favorites = this.getFavorites();
@@ -67,6 +77,7 @@ export class HomePage {
     this.saveFavorites(favorites);
   }
 
+  // GET all pokemon with limit 20 pokemons every API call
   async loadMore(event?: any) {
     if (!this.hasMore) {
       if (event) event.target.complete();
@@ -77,26 +88,31 @@ export class HomePage {
       const favorites = this.getFavorites();
 
       if (this.selectedType === 'all') {
+        // GET all pokemon with limit dan offset of pokemons every API call
         const data = await this.pokeApiService.fetchPokemon(
           this.offset,
           this.limit
         );
 
         for (const pokemon of data.results) {
+          // GET all pokemon detail
           const details = await this.pokeApiService.fetchPokemonDetails(
             pokemon.url
           );
 
+          // Split pokemon types if they have more than 1
           const stats = details.stats.reduce((acc: any, statObj: any) => {
             const statName = statObj.stat.name.replace(/-/g, '');
             acc[statName] = statObj.base_stat;
             return acc;
           }, {});
 
+          // Checks is there any favorite pokemons
           const isFavorite = favorites.some(
             (fav: any) => fav.id === details.id
           );
 
+          // Combined all the data into the array
           this.pokemons.push({
             name: details.name,
             image: details.sprites.front_default,
@@ -113,14 +129,16 @@ export class HomePage {
             ...stats,
           });
         }
-
+        
+        // Continue the starting point to GET another pokemons
         this.offset += this.limit;
 
+        // Checks if current data already as much as all pokemons count to stop the API call
         if (this.pokemons.length >= data.count) {
           this.hasMore = false;
         }
-
       } else {
+        // GET all pokemons by the selected type
         const data = await this.pokeApiService.fetchPokemonByType(
           this.selectedType
         );
@@ -161,13 +179,13 @@ export class HomePage {
       }
 
       if (event) event.target.complete();
-
     } catch (error) {
       console.error('Error loading more Pokémon:', error);
       if (event) event.target.complete();
     }
   }
 
+  // Handle type change by user
   onTypeChange(type: string) {
     this.selectedType = type;
     this.search = '';
@@ -175,6 +193,7 @@ export class HomePage {
     this.loadMore();
   }
 
+  // GET pokemon by it's name
   async handleSearchPokemon() {
     const favorites = this.getFavorites();
     if (this.search === '') {
@@ -182,7 +201,7 @@ export class HomePage {
       const res = await this.pokeApiService.fetchPokemonByName(
         this.search.toLowerCase()
       );
-      
+
       if (res) {
         for (const pokemon of res.results) {
           const details = await this.pokeApiService.fetchPokemonDetails(
@@ -227,7 +246,7 @@ export class HomePage {
         acc[statName] = statObj.base_stat;
         return acc;
       }, {});
-      
+
       const isFavorite = favorites.some((fav: any) => fav.id === details.id);
       if (details) {
         this.pokemons.push({
@@ -249,10 +268,12 @@ export class HomePage {
     }
   }
 
+  /// Handle name search by user
   handleChangeSearch(name: string) {
     this.search = name;
   }
 
+  // Reset data when type changes by user
   resetData() {
     this.pokemons = [];
     this.filteredPokemons = [];
