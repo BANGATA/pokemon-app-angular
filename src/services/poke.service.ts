@@ -7,6 +7,8 @@ import { environment } from 'src/environments/environment';
 })
 export class PokeApiService {
   private baseUrl = environment.api_url;
+
+  // GET all pokemons with limit and offset
   async fetchPokemon(offset: number, limit: number): Promise<any> {
     try {
       const response = await axios.get(
@@ -19,6 +21,7 @@ export class PokeApiService {
     }
   }
 
+  // GET all pokemon types
   async loadPokemonTypes() {
     try {
       const response = await axios.get(`${environment.api_url}type/`);
@@ -28,6 +31,7 @@ export class PokeApiService {
     }
   }
 
+  // GET pokemon by name
   async fetchPokemonByName(name?: string): Promise<any> {
     try {
       const response = await axios.get(`${this.baseUrl}pokemon/${name}`);
@@ -38,6 +42,7 @@ export class PokeApiService {
     }
   }
 
+  // GET all pokemon by the selected type
   async fetchPokemonByType(type: string): Promise<any> {
     try {
       const response = await axios.get(
@@ -50,6 +55,7 @@ export class PokeApiService {
     }
   }
 
+  // GET pokemon detail
   async fetchPokemonDetails(url: string): Promise<any> {
     try {
       const response = await axios.get(url);

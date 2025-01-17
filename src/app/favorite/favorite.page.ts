@@ -16,11 +16,13 @@ export class FavoritePage {
     this.getFavorites();
   }
 
+  // GET all favorite pokemons from local storage
   getFavorites() {
     const fav = this.helpers.getLocalStorageFavorite();
     this.pokemons = fav ? JSON.parse(fav) : [];
   }
 
+  // DELETE favorite pokemon from local storage
   toggleFavorite(pokemon: any): void {
     pokemon.isFavorite = false;
     this.pokemons = this.pokemons.filter((p) => p.isFavorite);
@@ -28,16 +30,19 @@ export class FavoritePage {
     this.dismissModal();
   }
 
+  // Open modal interaction for pokemon detail
   openModal(pokemon: any) {
     this.selectedPokemon = pokemon;
     this.modal.present();
   }
 
+  // Close modal interaction
   dismissModal() {
     this.modal.dismiss();
     this.selectedPokemon = null;
   }
 
+  // GET pokemon type and assign their classes
   getTypeClass(type: string) {
     return this.helpers.getTypeClass(type);
   }
